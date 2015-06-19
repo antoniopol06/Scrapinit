@@ -10,7 +10,22 @@ var db = require('../dbConfig');
 var utils = {
   testUser: {
     email: "testemail@gmail.com",
-    password: "123qwe"
+    password: '123qwe'
+  },
+
+  signUpUser: function(credentials, callback) {
+    request.post('/signup')
+    .send(credentials)
+    .end(function(err, res) {
+      if (callback) {
+        if (err) {
+          callback(err);
+        }
+        else {
+          callback();
+        }
+      }
+    });
   },
 
   destroyUser: function(schema, credentials, callback) {
@@ -81,21 +96,7 @@ describe('API AUTH USER', function() {
         .send(utils.testUser)
         .end(function (err, res) {
           res.status.should.equal(200);
-          done();
         });
-      });
-    });
-
-    it('login should respond with status code 401 if username/password is incorrect', function (done) {
-      var wrongTestUser = {
-        email: "doesntexist",
-        password: "wrongpassword"
-      }
-      request.post('/api/users/login')
-      .send(wrongTestUser)
-      .expect(401)
-      .end(function (err, res) {
-        done();
       });
     });
   });
